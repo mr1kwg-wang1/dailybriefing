@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>왕기 대시보드</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --bg: #f4f3f0;
+      --surface: #ffffff;
+      --surface-2: #f9f8f6;
+      --border: #e2e0db;
+      --border-strong: #ccc9c2;
+      --text-primary: #1a1a18;
+      --text-secondary: #5a5a55;
+      --text-muted: #9a9890;
+      --accent: #2563eb;
+      --accent-bg: #eff6ff;
+      --accent-text: #1d4ed8;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning-bg: #fffbeb;
+      --warning-text: #92400e;
+      --radius: 8px;
+      --font: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111110;
+        --surface: #1c1c1a;
+        --surface-2: #242422;
+        --border: #2e2e2b;
+        --border-strong: #3e3e3a;
+        --text-primary: #f0ede8;
+        --text-secondary: #a0a09a;
+        --text-muted: #666660;
+        --accent: #60a5fa;
+        --accent-bg: #1e3a5f;
+        --accent-text: #93c5fd;
+        --success: #4ade80;
+        --success-bg: #052e16;
+        --danger: #f87171;
+        --danger-bg: #450a0a;
+        --warning-bg: #451a03;
+        --warning-text: #fcd34d;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 0.5px solid var(--border-strong);
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .header-title { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
+    .header-sub { font-size: 12px; color: var(--text-muted); }
+    .header-right { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .grid { display: grid; gap: 10px; }
+    .row-3 { grid-template-columns: 1.3fr 1fr 1fr; }
+    .row-2 { grid-template-columns: 1fr 1fr; }
+    .row-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 700px) {
+      .row-3, .row-2, .row-4 { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+    }
+    .card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .card-label i { font-size: 13px; }
+    .card-value { font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: -1px; }
+    .card-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+    .clock-wrap { display: flex; align-items: baseline; gap: 6px; }
+    .clock-big { font-size: 38px; font-weight: 700; letter-spacing: -2px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+    .clock-sec { font-size: 20px; font-weight: 400; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .clock-date { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+    .section-head {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-head i { font-size: 14px; }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .badge-up { background: var(--success-bg); color: var(--success); }
+    .badge-down { background: var(--danger-bg); color: var(--danger); }
+    .badge-tag { background: var(--accent-bg); color: var(--accent-text); }
+
+    .news-item {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .news-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .news-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+    .news-text { font-size: 13px; line-height: 1.55; color: var(--text-primary); }
+    .news-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    .stock-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .stock-row:last-child { border-bottom: none; }
+    .stock-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .stock-ticker { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .stock-price { font-size: 13px; font-weight: 600; color: var(--text-primary); text-align: right; }
+
+    .re-main { font-size: 26px; font-weight: 700; letter-spacing: -1px; color: var(--text-primary); margin: 6px 0 4px; }
+    .re-sub { font-size: 12px; color: var(--text-secondary); }
+
+    textarea {
+      width: 100%;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: var(--font);
+      color: var(--text-primary);
+      background: var(--surface-2);
+      resize: none;
+      line-height: 1.6;
+      outline: none;
+    }
+    textarea:focus { border-color: var(--accent); }
+    textarea::placeholder { color: var(--text-muted); }
+
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--font);
+      margin-top: 8px;
+    }
+    .btn-link:hover { text-decoration: underline; }
+    .btn-save {
+      font-size: 12px;
+      padding: 5px 14px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-family: var(--font);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-save:hover { background: var(--bg); }
+
+    .weather-big { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin: 4px 0; }
+    .divider { height: 0.5px; background: var(--border); margin: 10px 0; }
+    .info-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+    .info-row .label { color: var(--text-muted); }
+    .info-row .val { color: var(--text-primary); font-weight: 500; }
+    .golf-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 13px;
+    }
+    .golf-row:last-child { border-bottom: none; }
+    .save-msg { font-size: 12px; color: var(--success); display: none; margin-left: 8px; }
+    .pill-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<div style="max-width: 960px; margin: 0 auto;">
+
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-dot"></div>
+      <div>
+        <div class="header-title">왕기 대시보드</div>
+        <div class="header-sub">성신양회(주) 단양공장 · 비상계획관</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <i class="ti ti-refresh" style="font-size:14px" aria-hidden="true"></i>
+      <span id="last-updated">--</span>
+    </div>
+  </div>
+
+  <div class="grid" style="gap: 10px;">
+
+    <!-- Row 1: 시계 + 환율 + 날씨 -->
+    <div class="grid row-3">
+      <div class="card">
+        <div class="card-label"><i class="ti ti-clock" aria-hidden="true"></i> 현재 시각</div>
+        <div class="clock-wrap">
+          <div class="clock-big" id="clock-hm">--:--</div>
+          <div class="clock-sec" id="clock-s">--</div>
+        </div>
+        <div class="clock-date" id="clock-date">--</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label"><i class="ti ti-currency-won" aria-hidden="true"></i> 환율 KRW / USD</div>
+        <div class="card-value" id="fx-rate">--</div>
+        <div class="card-sub" id="fx-sub">로딩 중...</div>
+        <button class="btn-link" onclick="go('https://finance.naver.com/marketindex/')">
+          <i class="ti ti-external-link" style="font-size:12px"></i> 네이버 환율
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-label"><i class="ti ti-cloud" aria-hidden="true"></i> 날씨 · 단양</div>
+        <div class="weather-big" id="weather-temp">--</div>
+        <div class="card-sub" id="weather-desc">로딩 중...</div>
+        <button class="btn-link" onclick="go('https://weather.naver.com/today/3310025300')">
+          <i class="ti ti-external-link" style="font-size:12px"></i> 단양 날씨 상세
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 2: 중동 뉴스 + 부동산 -->
+    <div class="grid row-2">
+      <div class="card">
+        <div class="section-head"><i class="ti ti-news" aria-hidden="true"></i> 중동 뉴스 요약</div>
+        <div id="news-list">
+          <div class="news-item">
+            <div class="news-dot"></div>
+            <div>
+              <div class="news-text">호르무즈 해협 재개방 이후 유조선 통행 정상화 진행 중 — 성신양회 유연탄 수송 영향 주시</div>
+              <div class="news-meta">2026.06.30</div>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-dot"></div>
+            <div>
+              <div class="news-text">WTI 유가 $72~75 구간 유지, 미-이란 휴전 MOU 이행 양측 준수 확인</div>
+              <div class="news-meta">2026.06.30</div>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-dot"></div>
+            <div>
+              <div class="news-text">KRW/USD 환율 운임비 영향 지속 — 유연탄 달러 계약 단가 모니터링 필요</div>
+              <div class="news-meta">2026.06.30</div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-link" onclick="go('https://www.google.com/search?q=%ED%98%B8%EB%A5%B4%EB%AC%B4%EC%A6%88+%EC%9C%A0%EA%B0%80+%EB%8B%AC%EB%9F%AC&tbm=nws')">
+          <i class="ti ti-external-link" style="font-size:12px"></i> Google 뉴스 더보기
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="section-head"><i class="ti ti-building-estate" aria-hidden="true"></i> 부동산 시세</div>
+        <div class="pill-row">
+          <span class="badge badge-tag">죽전동 벽산블루밍 4단지</span>
+          <span class="badge badge-tag">24평 · 79㎡</span>
+        </div>
+        <div class="card-label">동천역 인근 · 신분당선</div>
+        <div class="re-main" id="re-price">시세 확인 필요</div>
+        <div class="re-sub" id="re-sub">네이버 부동산 또는 실거래가 링크에서 최신가 조회 후 메모</div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button class="btn-link" onclick="go('https://m.land.naver.com/complex/info/108885')">
+            <i class="ti ti-external-link" style="font-size:12px"></i> 네이버 부동산
+          </button>
+          <button class="btn-link" onclick="go('https://apt2you.com/')">
+            <i class="ti ti-external-link" style="font-size:12px"></i> 아파트 실거래가
+          </button>
+        </div>
+        <div class="divider"></div>
+        <div class="card-label" style="margin-bottom: 6px;">시세 메모</div>
+        <textarea id="re-memo" rows="2" placeholder="예) 7.5억 (2026.06.30 실거래)"></textarea>
+      </div>
+    </div>
+
+    <!-- Row 3: 미국장 + 국내 주식 -->
+    <div class="grid row-2">
+      <div class="card">
+        <div class="section-head"><i class="ti ti-chart-line" aria-hidden="true"></i> 미국 장 동향</div>
+        <div id="us-stocks">
+          <div class="stock-row">
+            <div><div class="stock-name">S&amp;P 500</div><div class="stock-ticker">SPX</div></div>
+            <div><div class="stock-price" id="sp500">5,460.48</div><div id="sp500c" style="text-align:right"><span class="badge badge-up">+0.52%</span></div></div>
+          </div>
+          <div class="stock-row">
+            <div><div class="stock-name">나스닥</div><div class="stock-ticker">NASDAQ</div></div>
+            <div><div class="stock-price" id="ndx">19,821.34</div><div id="ndxc" style="text-align:right"><span class="badge badge-up">+0.71%</span></div></div>
+          </div>
+          <div class="stock-row">
+            <div><div class="stock-name">다우존스</div><div class="stock-ticker">DJI</div></div>
+            <div><div class="stock-price" id="dji">43,252.10</div><div id="djic" style="text-align:right"><span class="badge badge-up">+0.18%</span></div></div>
+          </div>
+          <div class="stock-row">
+            <div><div class="stock-name">WTI 원유</div><div class="stock-ticker">CRUDE OIL</div></div>
+            <div><div class="stock-price" id="wti">$73.42</div><div id="wtic" style="text-align:right"><span class="badge badge-down">-0.31%</span></div></div>
+          </div>
+        </div>
+        <button class="btn-link" onclick="go('https://finance.naver.com/world/')">
+          <i class="ti ti-external-link" style="font-size:12px"></i> 네이버 해외증시
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="section-head"><i class="ti ti-chart-bar" aria-hidden="true"></i> 국내 주식</div>
+        <div id="kr-stocks">
+          <div class="stock-row">
+            <div><div class="stock-name">코스피</div><div class="stock-ticker">KOSPI</div></div>
+            <div><div class="stock-price" id="kospi">2,681.32</div><div id="kospic" style="text-align:right"><span class="badge badge-up">+0.44%</span></div></div>
+          </div>
+          <div class="stock-row">
+            <div><div class="stock-name">코스닥</div><div class="stock-ticker">KOSDAQ</div></div>
+            <div><div class="stock-price" id="kosdaq">891.24</div><div id="kosdaqc" style="text-align:right"><span class="badge badge-up">+0.22%</span></div></div>
+          </div>
+          <div class="stock-row">
+            <div><div class="stock-name">성신양회</div><div class="stock-ticker">004980</div></div>
+            <div><div class="stock-price" id="sungshin">5,840</div><div id="sungshinc" style="text-align:right"><span class="badge badge-down">-0.85%</span></div></div>
+          </div>
+        </div>
+        <button class="btn-link" onclick="go('https://finance.naver.com/item/main.naver?code=004980')">
+          <i class="ti ti-external-link" style="font-size:12px"></i> 성신양회 주가
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 4: 골프 + 메모 -->
+    <div class="grid row-2">
+      <div class="card">
+        <div class="section-head"><i class="ti ti-golf" aria-hidden="true"></i> 골프 일정 · 태릉</div>
+        <div id="golf-schedule">
+          <div class="golf-row">
+            <span style="color: var(--text-muted); font-size:13px">예약 일정을 아래 메모에 기록하세요</span>
+          </div>
+          <div class="golf-row">
+            <span>예약 현황 조회</span>
+            <button class="btn-link" style="margin:0" onclick="go('https://www.imagepeople.co.kr/taereung/')">
+              <i class="ti ti-external-link" style="font-size:12px"></i> 태릉 바로가기
+            </button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-label" style="margin-bottom: 6px;">스코어·예약 메모</div>
+        <textarea id="golf-memo" rows="4" placeholder="예) 7/5(토) 08:30 배정&#10;7/12(토) 대기 중&#10;스코어: 92타"></textarea>
+        <div style="margin-top: 8px; display: flex; align-items: center;">
+          <button class="btn-save" onclick="saveMemo()">
+            <i class="ti ti-device-floppy" style="font-size:13px"></i> 저장
+          </button>
+          <span class="save-msg" id="save-msg">저장됐어요</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-head"><i class="ti ti-note" aria-hidden="true"></i> 오늘 메모 · 인수인계</div>
+        <textarea id="daily-memo" rows="8" placeholder="오늘 할 일, 보안 점검 사항, 비상계획 인수인계 등...&#10;&#10;예) ✅ 남문 차단기 점검&#10;⬜ 월말 출입대장 취합&#10;⬜ CCTV 녹화 상태 확인"></textarea>
+        <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px;">
+          <button class="btn-save" onclick="saveDaily()">
+            <i class="ti ti-device-floppy" style="font-size:13px"></i> 저장
+          </button>
+          <span class="save-msg" id="save-msg-daily">저장됐어요</span>
+          <button class="btn-link" style="margin:0; margin-left:auto" onclick="copyMemo()">
+            <i class="ti ti-copy" style="font-size:12px"></i> 복사
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function go(url) { window.open(url, '_blank'); }
+
+  /* 시계 */
+  function tick() {
+    const now = new Date();
+    const hm = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clock-hm').textContent = hm;
+    document.getElementById('clock-s').textContent = s;
+    const days = ['일','월','화','수','목','금','토'];
+    document.getElementById('clock-date').textContent =
+      now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 ' + now.getDate() + '일 (' + days[now.getDay()] + ')';
+  }
+  setInterval(tick, 1000);
+  tick();
+
+  /* 업데이트 시각 */
+  function setUpdated() {
+    const now = new Date();
+    document.getElementById('last-updated').textContent =
+      String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ' 갱신';
+  }
+  setUpdated();
+
+  /* 환율 */
+  async function fetchFX() {
+    try {
+      const r = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      const d = await r.json();
+      const krw = Math.round(d.rates.KRW);
+      document.getElementById('fx-rate').textContent = krw.toLocaleString() + '원';
+      document.getElementById('fx-sub').textContent = '1 USD 기준 · ExchangeRate-API';
+    } catch(e) {
+      document.getElementById('fx-rate').textContent = '조회 실패';
+      document.getElementById('fx-sub').textContent = '링크에서 확인하세요';
+    }
+  }
+  fetchFX();
+
+  /* 날씨 (Open-Meteo, 단양 좌표) */
+  async function fetchWeather() {
+    try {
+      const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.9847&longitude=128.3659&current=temperature_2m,weathercode,windspeed_10m&timezone=Asia/Seoul');
+      const d = await r.json();
+      const t = Math.round(d.current.temperature_2m);
+      const wind = Math.round(d.current.windspeed_10m);
+      const wmap = {0:'맑음 ☀',1:'대체로 맑음 🌤',2:'구름 조금 ⛅',3:'흐림 ☁',45:'안개 🌫',48:'안개 🌫',51:'이슬비 🌦',61:'비 🌧',63:'비 🌧',65:'폭우 🌧',71:'눈 🌨',80:'소나기 🌦',95:'뇌우 ⛈'};
+      document.getElementById('weather-temp').textContent = t + '°C';
+      document.getElementById('weather-desc').textContent = (wmap[d.current.weathercode] || '날씨 확인') + ' · 풍속 ' + wind + 'km/h';
+    } catch(e) {
+      document.getElementById('weather-temp').textContent = '--';
+      document.getElementById('weather-desc').textContent = '조회 실패 — 링크로 확인';
+    }
+  }
+  fetchWeather();
+
+  /* 메모 저장/불러오기 */
+  function saveMemo() {
+    localStorage.setItem('golf-memo', document.getElementById('golf-memo').value);
+    localStorage.setItem('re-memo', document.getElementById('re-memo').value);
+    showMsg('save-msg');
+  }
+  function saveDaily() {
+    localStorage.setItem('daily-memo', document.getElementById('daily-memo').value);
+    showMsg('save-msg-daily');
+  }
+  function showMsg(id) {
+    const el = document.getElementById(id);
+    el.style.display = 'inline';
+    setTimeout(() => { el.style.display = 'none'; }, 2000);
+  }
+  function copyMemo() {
+    const text = document.getElementById('daily-memo').value;
+    navigator.clipboard.writeText(text).then(() => showMsg('save-msg-daily'));
+  }
+  function loadMemos() {
+    const gm = localStorage.getItem('golf-memo');
+    const rm = localStorage.getItem('re-memo');
+    const dm = localStorage.getItem('daily-memo');
+    if(gm) document.getElementById('golf-memo').value = gm;
+    if(rm) document.getElementById('re-memo').value = rm;
+    if(dm) document.getElementById('daily-memo').value = dm;
+  }
+  loadMemos();
+</script>
+</body>
+</html>
