@@ -99,7 +99,7 @@ def build_message():
 {news}
 
 ━━━━━━━━━━━━━
-🔗 대시보드: https://mr1kwg-wang1.github.io/-/"""
+🔗 대시보드: https://mr1kwg-wang1.github.io/dailybriefing/"""
 
     return message
 
