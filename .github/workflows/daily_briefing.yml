@@ -1,9 +1,14 @@
 name: briefing
 
 on:
-  # 실제 일일 실행은 cron-job.org의 "Daily Briefing Trigger"가 매일 06:50 Asia/Seoul에
-  # workflow_dispatch API를 직접 호출한다. GitHub 자체 schedule을 함께 두면 07:00 KST에
-  # 같은 워크플로가 한 번 더 돌아 텔레그램 메시지가 중복 발송되므로 여기서는 제거한다.
+  # dashboard.txt는 고정된 시각이 아니라 매일 claude.ai에서 브리핑을 작성한 뒤
+  # 사용자가 커밋하는 시점에 완성된다. 고정 시각(cron-job.org 06:50 등)에 맞춰
+  # 발송하면 아직 오늘자 커밋 전이라 어제 파일이 나가는 문제가 생기므로,
+  # dashboard.txt가 실제로 바뀌는 순간(push)에 반응하도록 트리거를 바꾼다.
+  push:
+    branches: [main]
+    paths:
+      - dashboard.txt
   workflow_dispatch:
 
 jobs:
