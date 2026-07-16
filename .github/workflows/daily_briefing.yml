@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: install
-        run: pip install requests feedparser
+        run: pip install requests feedparser tzdata
       - name: run
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
