@@ -1,8 +1,9 @@
 name: briefing
 
 on:
-  schedule:
-      - cron: "0 22 * * *"
+  # 실제 일일 실행은 cron-job.org의 "Daily Briefing Trigger"가 매일 06:50 Asia/Seoul에
+  # workflow_dispatch API를 직접 호출한다. GitHub 자체 schedule을 함께 두면 07:00 KST에
+  # 같은 워크플로가 한 번 더 돌아 텔레그램 메시지가 중복 발송되므로 여기서는 제거한다.
   workflow_dispatch:
 
 jobs:
