@@ -12,17 +12,17 @@ GitHub Pages(`pages-build-deployment` 워크플로)로 서빙되는 웹페이지
 
 이 루틴이 이렇게 GitHub를 안 거치는 이유: 클라우드 실행 환경(Environment "Default", `env_015FnvcrGMxGGRPFdHf9SVWF`)의 네트워크 정책이 기본값("신뢰됨")일 때 `api.github.com`과 `api.telegram.org` 둘 다 차단되어, git push/GitHub Contents API/GitHub MCP 도구가 전부 403으로 실패했습니다. Environment 설정에서 네트워크 액세스를 **"전체"**로 바꾼 뒤에야 텔레그램 직접 발송이 성공했습니다. (Environment 설정 위치: claude.ai/code 하단 입력창의 "Default" 버튼 → 톱니바퀴 아이콘 → 네트워크 액세스.)
 
-### 이 저장소 안의 dashboard.txt / briefing.py / .github/workflows/daily_briefing.yml — 정리 예정, 지금은 무시
+### 이 저장소 안의 dashboard.txt / briefing.py — 정리 예정, 지금은 무시 (2026-07-21: workflow는 이미 삭제됨)
 
-과거에는 이 세 파일이 실제 발송 파이프라인이었습니다(사용자가 매일 아침 claude.ai 채팅으로 dashboard.txt를 작성 → 커밋 → GitHub Actions가 텔레그램 발송). 지금은 위의 클라우드 루틴이 이 역할을 완전히 대체했습니다.
+과거에는 `dashboard.txt` + `briefing.py` + `.github/workflows/daily_briefing.yml` 세 파일이 실제 발송 파이프라인이었습니다(사용자가 매일 아침 claude.ai 채팅으로 dashboard.txt를 작성 → 커밋 → GitHub Actions가 텔레그램 발송). 지금은 위의 클라우드 루틴이 이 역할을 완전히 대체했습니다.
 
-- `dashboard.txt`는 여전히 (별도 경로로) 매일 갱신되고 있지만, 위 클라우드 루틴과는 **무관**합니다.
-- `briefing.py`는 2026-07-17에 dashboard.txt 내용을 보내는 대신 "Claude에서 오늘브리핑을 입력하세요"라는 고정 안내 메시지를 보내도록 바뀌었습니다. **이 안내 메시지는 이제 의미가 없습니다** (클라우드 루틴이 이미 자동으로 다 하기 때문) — 무시해도 되고, 사용자가 추후 이 파일들(`dashboard.txt`, `briefing.py`, `.github/workflows/daily_briefing.yml`)을 정리(삭제)할 예정입니다.
+- `.github/workflows/daily_briefing.yml`은 **2026-07-21에 삭제했습니다.** 이 워크플로는 2026-07-17부터 dashboard.txt 내용 대신 "Claude에서 오늘브리핑을 입력하세요"라는 무의미해진 고정 안내 메시지를 텔레그램으로 보내고 있었는데, 클라우드 루틴이 이미 실제 브리핑을 자동으로 보내고 있어 완전히 중복이었습니다. 삭제해도 실제 브리핑에는 영향 없음 (애초에 무관한 경로였음).
+- `dashboard.txt`, `briefing.py`는 아직 저장소에 남아 있지만 이제 이들을 트리거하는 워크플로가 없어 완전히 죽은 코드입니다. dashboard.txt가 (별도 경로로) 계속 갱신되더라도 더 이상 아무 동작도 일어나지 않습니다. 다음 정리 때 같이 삭제 대상.
 
-### 정리 대기 중인 항목 (아직 실행 안 됨)
+### 정리 대기 중인 항목
 
 - `dashboard-content-writer` fine-grained PAT — 더 이상 안 씀, 폐기 권장
-- cron-job.org의 "Daily Briefing Trigger" 크론 잡 — `daily_briefing.yml`의 workflow_dispatch를 호출하던 것, 더 이상 필요 없음
-- 위 세 파일(dashboard.txt/briefing.py/daily_briefing.yml) 자체
+- cron-job.org의 "Daily Briefing Trigger" 크론 잡 — 이미 삭제된 workflow_dispatch를 호출하던 것, 이제 대상이 없으니 꺼도 됨
+- `dashboard.txt`, `briefing.py` 파일 자체 (죽은 코드)
 
 이 저장소에서 작업할 때는 **"브리핑을 고치자" = 클라우드 루틴을 고치는 것**이지, 이 저장소의 Python/YAML을 고치는 게 아님을 기억하세요.
